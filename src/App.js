@@ -52,22 +52,20 @@ class App extends Component {
 
   setPercentages = (o) => {
     this.setState(o, () => {
-      if(this.state.onePercent + this.state.twoPercent + this.state.threePercent + this.state.fourPercent !== 1) {
-        this.setState({errorMsg: "Percentages don't add up to 100"});
-      }
-      else {
-        this.setState({errorMsg: ""});
-      }
+      const total = this.state.onePercent + this.state.twoPercent + this.state.threePercent + this.state.fourPercent;
+      this.setState({
+        errorMsg: total !== 1 ? `Percentages add up to ${parseInt(total*100)}, they should add up to 100` : ''
+      });
 
       this.calculate(Number(this.state.name));
     });
   };
 
   calculate = (amount) => {
-    let first = amount * this.state.onePercent;
-    let secon = amount * this.state.twoPercent;
-    let third = amount * this.state.threePercent;
-    let forth = amount * this.state.fourPercent;
+    let first = amount * this.state.onePercent,
+        secon = amount * this.state.twoPercent,
+        third = amount * this.state.threePercent,
+        forth = amount * this.state.fourPercent;
 
     this.setState({
       one:  '$' + (String(first).split('.')[1] ? first.toFixed(2) : first),
