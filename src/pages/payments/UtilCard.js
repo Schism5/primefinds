@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Card from '@material-ui/core/Card';
 import TextField from '@material-ui/core/TextField';
-import './App.css';
 
 class UtilCard extends Component {
   constructor(props) {
