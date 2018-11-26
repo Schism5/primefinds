@@ -26,7 +26,7 @@ class Payments extends Component {
 
     render() {
         return(
-            <div>
+            <div style={{padding:'20px'}}>
                 <TextField
                     id="outlined-name"
                     label="Dollar Amount"
