@@ -1,28 +1,75 @@
 import React, { Component } from 'react';
 import AppBar from '@material-ui/core/AppBar/AppBar';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Drawer from '@material-ui/core/Drawer';
+import MoneyIcon from '@material-ui/icons/AttachMoney';
+import PieChartIcon from '@material-ui/icons/PieChart';
 
 class Header extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            isOpen: false
+        };
+
+        this.toggleDrawer = this.toggleDrawer.bind(this);
     }
 
     render() {
+        const sideList = (
+            <div >
+                <List>
+                    <ListItem button key="Bills">
+                        <ListItemIcon><PieChartIcon /></ListItemIcon>
+                        <ListItemText primary="Bills"/>
+                    </ListItem>
+                    <ListItem button key="Sales">
+                        <ListItemIcon><MoneyIcon /></ListItemIcon>
+                        <ListItemText primary="Sales"/>
+                    </ListItem>
+                </List>
+            </div>
+        );
+
         return (
-            <AppBar className="title_bar" position='static'>
-                <div className="title_info">
-                    <span className="thd_logo"></span>
-                    <div className="title_with_number">
-                        <span className="page_title">ok</span>
-                        <span className="active_user">ok</span>
+            <AppBar position='static' style={{display:'inline-block', padding:'8px'}}>
+                <div style={{paddingLeft:'0px', paddingRight:'20px', display:'inline-block'}}>
+                    <IconButton color="inherit" aria-label="Menu" onClick={this.toggleDrawer(true)}>
+                        <MenuIcon />
+                    </IconButton>
+                </div>
+                <Typography 
+                    variant="h6" 
+                    color="inherit"
+                    style={{display:'inline-block', verticalAlign:'middle'}}>
+                    Prime Finds
+                </Typography>
+
+                <Drawer open={this.state.isOpen} onClose={this.toggleDrawer(false)}>
+                    <div
+                        tabIndex={0}
+                        role="button"
+                        style={{width:'250px'}}
+                        onClick={this.toggleDrawer(false)}
+                        onKeyDown={this.toggleDrawer(false)}>
+                        {sideList}
                     </div>
-                </div>
-                <div className="title_bar_right">
-                    ok
-                    <i className="icon_exit-to-app exit" title="Click to exit." onClick={(e)=>window.close()}></i>
-                </div>
+                </Drawer>
             </AppBar>
         );
     }
+
+    toggleDrawer = open => () => {
+        this.setState({
+          isOpen: open,
+        });
+      };
 }
 
 export default Header;
