@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button'
+import ClearIcon from '@material-ui/icons/Clear';
 import UtilCard from './UtilCard.js';
 
 class Payments extends Component {
@@ -22,21 +24,31 @@ class Payments extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.calculate = this.calculate.bind(this);
         this.setPercentages = this.setPercentages.bind(this);
+        this.clearAmount = this.clearAmount.bind(this);
     }
 
     render() {
         return(
             <div style={{padding:'20px'}}>
-                <TextField
-                    id="outlined-name"
-                    label="Dollar Amount"
-                    value={this.state.name}
-                    onChange={this.handleChange()}
-                    margin="normal"
-                    variant="outlined"
-                    color="secondary"
-                    style={{width:'220px'}}
-                />
+                <div>
+                    <TextField
+                        id="outlined-name"
+                        label="Dollar Amount"
+                        value={this.state.name}
+                        onChange={this.handleChange()}
+                        margin="normal"
+                        variant="outlined"
+                        color="secondary"
+                        style={{width:'230px', display:'inline-block'}}
+                    />
+                    <Button 
+                        variant="raised" 
+                        color="primary" 
+                        style={{marginTop:'19px', height:'50px', width:'55px', marginLeft:'0px', minWidth:'55px'}}
+                        onClick={this.clearAmount}>
+                        <ClearIcon />
+                    </Button>
+                </div>
                 
                 <div style={{marginTop:'25px'}}>
                     <UtilCard type="Office" percent="25" amount={this.state.one}   setPercentages={this.setPercentages} pkey="onePercent"  />
@@ -59,21 +71,20 @@ class Payments extends Component {
 
             this.calculate(Number(this.state.name));
         });
-    };
+    }
     
     calculate = (amount) => {
-        let first = amount * this.state.onePercent,
-            secon = amount * this.state.twoPercent,
-            third = amount * this.state.threePercent,
-            forth = amount * this.state.fourPercent;
-
         this.setState({
-            one:  '$' + (String(first).split('.')[1] ? first.toFixed(2) : first),
-            two:  '$' + (String(secon).split('.')[1] ? secon.toFixed(2) : secon),
-            three:'$' + (String(third).split('.')[1] ? third.toFixed(2) : third),
-            four: '$' + (String(forth).split('.')[1] ? forth.toFixed(2) : forth)
+            one  : this.formatDollar(amount * this.state.onePercent),
+            two  : this.formatDollar(amount * this.state.twoPercent),
+            three: this.formatDollar(amount * this.state.threePercent),
+            four : this.formatDollar(amount * this.state.fourPercent)
         });
-    };
+    }
+
+    formatDollar(num) {
+        return '$' + (String(num).split('.')[1] ? num.toFixed(2) : num);
+    }
     
     handleChange = () => event => {
         this.setState({
@@ -81,7 +92,11 @@ class Payments extends Component {
         });
 
         this.calculate(Number(event.target.value));
-    };
+    }
+
+    clearAmount = () => {
+        this.setState({name:''}, () => this.calculate(0));
+    }
 }
 
 export default Payments;
