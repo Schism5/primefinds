@@ -25,11 +25,11 @@ class Header extends Component {
         const sideList = (
             <div >
                 <List>
-                    <ListItem button key="Bills">
+                    <ListItem button key="Bills" onClick={() => {this.props.setPage('Payments')}}>
                         <ListItemIcon><PieChartIcon /></ListItemIcon>
                         <ListItemText primary="Bills"/>
                     </ListItem>
-                    <ListItem button key="Sales">
+                    <ListItem button key="Sales" onClick={() => {this.props.setPage('Sales')}}>
                         <ListItemIcon><MoneyIcon /></ListItemIcon>
                         <ListItemText primary="Sales"/>
                     </ListItem>
