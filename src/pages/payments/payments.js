@@ -3,6 +3,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button'
 import ClearIcon from '@material-ui/icons/Clear';
 import UtilCard from './UtilCard.js';
+import axios from 'axios';
 
 class Payments extends Component {
     constructor(props) {
@@ -14,17 +15,35 @@ class Payments extends Component {
             two: '$0',
             three: '$0',
             four: '$0',
-            onePercent: 0.25,
-            twoPercent: 0.4,
-            threePercent: 0.2,
-            fourPercent: 0.15,
-            errorMsg: ''
+            "1Percent": 0.25,
+            "2Percent": 0.4,
+            "3Percent": 0.2,
+            "4Percent": 0.15,
+            errorMsg: '',
+            data: []
         };
       
         this.handleChange = this.handleChange.bind(this);
         this.calculate = this.calculate.bind(this);
         this.setPercentages = this.setPercentages.bind(this);
         this.clearAmount = this.clearAmount.bind(this);
+
+        this.numToName = {
+            1: "one",
+            2: "two",
+            3: "three",
+            4: "four"
+        };
+    }
+
+    componentWillMount() {
+        const me = this;
+        axios.get('https://api.mlab.com/api/1/databases/heroku_0lwkfbwj/collections/bills?apiKey=aVVSLiUK4fYFdptcpCwQR2sO9QXtZKXs')
+        .then(resp => {
+            me.setState({
+                data: resp.data
+            });
+        });
     }
 
     render() {
@@ -51,10 +70,16 @@ class Payments extends Component {
                 </div>
                 
                 <div style={{marginTop:'25px'}}>
-                    <UtilCard type="Office" percent="25" amount={this.state.one}   setPercentages={this.setPercentages} pkey="onePercent"  />
-                    <UtilCard type="House"  percent="40" amount={this.state.two}   setPercentages={this.setPercentages} pkey="twoPercent"  />
-                    <UtilCard type="Other"  percent="20" amount={this.state.three} setPercentages={this.setPercentages} pkey="threePercent"/>
-                    <UtilCard type="Other"  percent="15" amount={this.state.four}  setPercentages={this.setPercentages} pkey="fourPercent" />
+                    {this.state.data.map((item, index) => {
+                        return (<UtilCard 
+                            key={item.name}
+                            type={item.name} 
+                            percent={item.percent} 
+                            amount={this.state[this.numToName[index+1]]} 
+                            setPercentages={this.setPercentages} 
+                            pkey={(index+1) + 'Percent'}
+                        />);
+                    })}
                 </div>
 
                 <div style={{color:'red', marginTop:'20px'}}>{this.state.errorMsg}</div>
@@ -64,9 +89,9 @@ class Payments extends Component {
 
     setPercentages = (o) => {
         this.setState(o, () => {
-            const total = this.state.onePercent + this.state.twoPercent + this.state.threePercent + this.state.fourPercent;
+            const total = this.state['1Percent'] + this.state['2Percent'] + this.state['3Percent'] + this.state['4Percent'];
             this.setState({
-            errorMsg: total !== 1 ? `Percentages add up to ${parseInt(total*100)}, they should add up to 100` : ''
+                errorMsg: total !== 1 ? `Percentages add up to ${parseInt(total*100)}, they should add up to 100` : ''
             });
 
             this.calculate(Number(this.state.name));
@@ -75,10 +100,10 @@ class Payments extends Component {
     
     calculate = (amount) => {
         this.setState({
-            one  : this.formatDollar(amount * this.state.onePercent),
-            two  : this.formatDollar(amount * this.state.twoPercent),
-            three: this.formatDollar(amount * this.state.threePercent),
-            four : this.formatDollar(amount * this.state.fourPercent)
+            one  : this.formatDollar(amount * this.state['1Percent']),
+            two  : this.formatDollar(amount * this.state['2Percent']),
+            three: this.formatDollar(amount * this.state['3Percent']),
+            four : this.formatDollar(amount * this.state['4Percent'])
         });
     }
 
