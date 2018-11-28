@@ -22,15 +22,10 @@ class Payments extends Component {
     }
 
     componentWillMount() {
-        const me = this;
-        axios.get('https://api.mlab.com/api/1/databases/heroku_0lwkfbwj/collections/bills?apiKey=aVVSLiUK4fYFdptcpCwQR2sO9QXtZKXs')
-        .then(resp => {
-            me.setState({
-                data: resp.data.map(item => {
-                    return Object.assign(item, {percent: Number(item.percent)})
-                })
-            });
-        });
+        const me  = this;
+        const url = 'https://api.mlab.com/api/1/databases/heroku_0lwkfbwj/collections/bills?apiKey=aVVSLiUK4fYFdptcpCwQR2sO9QXtZKXs';
+
+        axios.get(url).then(resp => me.setState({data: resp.data}));
     }
 
     render() {
