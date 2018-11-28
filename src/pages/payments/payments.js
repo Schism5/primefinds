@@ -4,6 +4,9 @@ import Button from '@material-ui/core/Button'
 import ClearIcon from '@material-ui/icons/Clear';
 import UtilCard from './UtilCard.js';
 import axios from 'axios';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 class Payments extends Component {
     constructor(props) {
@@ -12,7 +15,9 @@ class Payments extends Component {
         this.state = {
             name: '',
             data: [],
-            errorMsg: ''
+            errorMsg: '',
+            boxChecked: false,
+            isDownloading: true
         };
       
         this.handleChange = this.handleChange.bind(this);
@@ -25,7 +30,7 @@ class Payments extends Component {
         const me  = this;
         const url = 'https://api.mlab.com/api/1/databases/heroku_0lwkfbwj/collections/bills?apiKey=aVVSLiUK4fYFdptcpCwQR2sO9QXtZKXs';
 
-        axios.get(url).then(resp => me.setState({data: resp.data}));
+        axios.get(url).then(resp => me.setState({data: resp.data, isDownloading: false}));
     }
 
     render() {
@@ -43,7 +48,7 @@ class Payments extends Component {
                         style={{width:'230px', display:'inline-block'}}
                     />
                     <Button 
-                        variant="raised" 
+                        variant="contained" 
                         color="primary" 
                         style={{marginTop:'19px', height:'50px', width:'55px', marginLeft:'0px', minWidth:'55px'}}
                         onClick={this.clearAmount}>
@@ -52,19 +57,47 @@ class Payments extends Component {
                 </div>
                 
                 <div style={{marginTop:'25px'}}>
-                    {this.state.data.map(item => {
-                        return (<UtilCard 
-                            key={item.name}
-                            type={item.name} 
-                            percent={item.percent} 
-                            amount={item.amount} 
-                            setPercentages={this.setPercentages} 
-                            pkey={item.name}
-                        />);
-                    })}
+                    {this.state.isDownloading ? 
+                        <CircularProgress style={{width:'70px', height:'70px'}}/> 
+                        : 
+                        this.state.data.map(item => {
+                            return (<UtilCard 
+                                key={item.name}
+                                type={item.name} 
+                                percent={item.percent} 
+                                amount={item.amount} 
+                                setPercentages={this.setPercentages} 
+                                pkey={item.name}
+                            />);
+                        })
+                    }
                 </div>
 
-                <div style={{color:'red', marginTop:'20px'}}>{this.state.errorMsg}</div>
+                <div style={{color:'red', marginTop:'20px', minHeight:'30px', visibility:this.state.errorMsg?'visible':'hidden'}}>{this.state.errorMsg}</div>
+
+                <br></br>
+                <div>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={this.state.boxChecked}
+                                onChange={(event) => this.setState({ boxChecked: event.target.checked })}
+                                value="eh"
+                                color="primary"
+                                label="I'm ready to save for today"
+                            />
+                        }
+                        label="I'm Ready to Save"
+                    />
+                    <Button 
+                        variant="contained" 
+                        color="primary" 
+                        disabled={!this.state.boxChecked}
+                        onClick={() => setTimeout(()=>this.setState({boxChecked: false}), 500)}
+                        style={{marginLeft:'50px'}}>
+                    Save
+                    </Button>
+                </div>
             </div>
         );
     }
