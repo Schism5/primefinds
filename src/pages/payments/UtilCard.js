@@ -38,18 +38,14 @@ class UtilCard extends Component {
   }
 
   handleFocus = () => event => {
-    if(this.state.percent === '0') {
-      this.setState({
-        percent: ''
-      });
+    if(this.state.percent === 0) {
+      this.setState({percent: ''});
     }
   }
 
   handleBlur = () => event => {
     if(this.state.percent === '') {
-      this.setState({
-        percent: '0'
-      }, this.setPer);
+      this.setState({percent: 0}, this.setPer);
     }
   }
 
@@ -58,18 +54,12 @@ class UtilCard extends Component {
 
     if(value.length <= 3) {
       this.setState({
-        percent: value
+        percent: value ? parseInt(value) : 0
       }, this.setPer);
     }
   }
 
-  setPer = () => {
-    let o = {};
-    let v = parseInt(this.state.percent) || 0;
-
-    o[this.props.pkey] = Number((v / 100).toFixed(2));
-    this.props.setPercentages(o);
-  }
+  setPer = () => this.props.setPercentages(this.props.pkey, this.state.percent)
 }
 
 export default UtilCard;
