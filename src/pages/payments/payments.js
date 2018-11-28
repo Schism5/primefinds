@@ -3,6 +3,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button'
 import ClearIcon from '@material-ui/icons/Clear';
 import UtilCard from './UtilCard.js';
+import axios from 'axios';
 
 class Payments extends Component {
     constructor(props) {
@@ -10,14 +11,7 @@ class Payments extends Component {
 
         this.state = {
             name: '',
-            one: '$0',
-            two: '$0',
-            three: '$0',
-            four: '$0',
-            onePercent: 0.25,
-            twoPercent: 0.4,
-            threePercent: 0.2,
-            fourPercent: 0.15,
+            data: [],
             errorMsg: ''
         };
       
@@ -25,6 +19,18 @@ class Payments extends Component {
         this.calculate = this.calculate.bind(this);
         this.setPercentages = this.setPercentages.bind(this);
         this.clearAmount = this.clearAmount.bind(this);
+    }
+
+    componentWillMount() {
+        const me = this;
+        axios.get('https://api.mlab.com/api/1/databases/heroku_0lwkfbwj/collections/bills?apiKey=aVVSLiUK4fYFdptcpCwQR2sO9QXtZKXs')
+        .then(resp => {
+            me.setState({
+                data: resp.data.map(item => {
+                    return Object.assign(item, {percent: Number(item.percent)})
+                })
+            });
+        });
     }
 
     render() {
@@ -51,10 +57,16 @@ class Payments extends Component {
                 </div>
                 
                 <div style={{marginTop:'25px'}}>
-                    <UtilCard type="Office" percent="25" amount={this.state.one}   setPercentages={this.setPercentages} pkey="onePercent"  />
-                    <UtilCard type="House"  percent="40" amount={this.state.two}   setPercentages={this.setPercentages} pkey="twoPercent"  />
-                    <UtilCard type="Other"  percent="20" amount={this.state.three} setPercentages={this.setPercentages} pkey="threePercent"/>
-                    <UtilCard type="Other"  percent="15" amount={this.state.four}  setPercentages={this.setPercentages} pkey="fourPercent" />
+                    {this.state.data.map(item => {
+                        return (<UtilCard 
+                            key={item.name}
+                            type={item.name} 
+                            percent={item.percent} 
+                            amount={item.amount} 
+                            setPercentages={this.setPercentages} 
+                            pkey={item.name}
+                        />);
+                    })}
                 </div>
 
                 <div style={{color:'red', marginTop:'20px'}}>{this.state.errorMsg}</div>
@@ -62,23 +74,27 @@ class Payments extends Component {
         );
     }
 
-    setPercentages = (o) => {
-        this.setState(o, () => {
-            const total = this.state.onePercent + this.state.twoPercent + this.state.threePercent + this.state.fourPercent;
+    setPercentages = (k, v) => {
+        this.setState({
+            data: this.state.data.map(item => Object.assign(item, item.name === k ? {percent: v} : {}))
+        }, () => {
+            const total = this.state.data.reduce((accum, current) => accum + current.percent, 0);
+
             this.setState({
-            errorMsg: total !== 1 ? `Percentages add up to ${parseInt(total*100)}, they should add up to 100` : ''
+                errorMsg: total !== 100 ? `Percentages add up to ${total}, they should add up to 100` : ''
             });
 
             this.calculate(Number(this.state.name));
         });
     }
     
-    calculate = (amount) => {
+    calculate = amount => {
+        const am = Number(amount);
         this.setState({
-            one  : this.formatDollar(amount * this.state.onePercent),
-            two  : this.formatDollar(amount * this.state.twoPercent),
-            three: this.formatDollar(amount * this.state.threePercent),
-            four : this.formatDollar(amount * this.state.fourPercent)
+            data: this.state.data.map(item => {
+                let percent = am * (item.percent / 100);
+                return Object.assign(item, {amount: this.formatDollar(percent)})
+            })
         });
     }
 
