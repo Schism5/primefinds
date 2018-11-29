@@ -10,6 +10,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Drawer from '@material-ui/core/Drawer';
 import MoneyIcon from '@material-ui/icons/AttachMoney';
 import PieChartIcon from '@material-ui/icons/PieChart';
+import HistoryIcon from '@material-ui/icons/History';
+import { Divider } from '@material-ui/core';
 
 class Header extends Component {
     constructor(props) {
@@ -32,6 +34,13 @@ class Header extends Component {
                     <ListItem button key="Sales" onClick={() => {this.props.setPage('Sales')}}>
                         <ListItemIcon><MoneyIcon /></ListItemIcon>
                         <ListItemText primary="Sales"/>
+                    </ListItem>
+                </List>
+                <Divider />
+                <List>
+                    <ListItem button key="BillsHistory" onClick={() => {this.props.setPage('Payments')}}>
+                        <ListItemIcon><HistoryIcon /></ListItemIcon>
+                        <ListItemText primary="Bills History"/>
                     </ListItem>
                 </List>
             </div>
