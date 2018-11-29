@@ -24,6 +24,7 @@ class Payments extends Component {
         this.calculate = this.calculate.bind(this);
         this.setPercentages = this.setPercentages.bind(this);
         this.clearAmount = this.clearAmount.bind(this);
+        this.saveToHistory = this.saveToHistory.bind(this);
     }
 
     componentWillMount() {
@@ -58,14 +59,14 @@ class Payments extends Component {
                 
                 <div style={{marginTop:'25px'}}>
                     {this.state.isDownloading ? 
-                        <CircularProgress style={{width:'70px', height:'70px'}}/> 
+                        <CircularProgress style={{width:'70px', height:'70px', marginLeft:'90px'}}/> 
                         : 
                         this.state.data.map(item => {
                             return (<UtilCard 
                                 key={item.name}
                                 type={item.name} 
                                 percent={item.percent} 
-                                amount={item.amount} 
+                                amount={item.stringAmount} 
                                 setPercentages={this.setPercentages} 
                                 pkey={item.name}
                             />);
@@ -82,9 +83,7 @@ class Payments extends Component {
                             <Checkbox
                                 checked={this.state.boxChecked}
                                 onChange={(event) => this.setState({ boxChecked: event.target.checked })}
-                                value="eh"
                                 color="primary"
-                                label="I'm ready to save for today"
                             />
                         }
                         label="I'm Ready to Save"
@@ -93,13 +92,29 @@ class Payments extends Component {
                         variant="contained" 
                         color="primary" 
                         disabled={!this.state.boxChecked}
-                        onClick={() => setTimeout(()=>this.setState({boxChecked: false}), 500)}
-                        style={{marginLeft:'50px'}}>
+                        onClick={this.saveToHistory}
+                        style={{marginLeft:'55px'}}>
                     Save
                     </Button>
                 </div>
             </div>
         );
+    }
+
+    saveToHistory() {
+        const url  = "https://api.mlab.com/api/1/databases/heroku_0lwkfbwj/collections/bills_history?apiKey=aVVSLiUK4fYFdptcpCwQR2sO9QXtZKXs";
+        const date = new Date();
+        let pieces = date.toISOString().split('T');
+        const doc  = {
+            total: Number(this.state.name),
+            epoch: date.getTime(),
+            date : pieces[0],
+            time : pieces[1].split('.')[0],
+            data : [...this.state.data]
+        };
+
+        axios.post(url, doc).then(resp => console.log(resp));
+        this.setState({boxChecked: false});
     }
 
     setPercentages = (k, v) => {
@@ -112,7 +127,7 @@ class Payments extends Component {
                 errorMsg: total !== 100 ? `Percentages add up to ${total}, they should add up to 100` : ''
             });
 
-            this.calculate(Number(this.state.name));
+            this.calculate(this.state.name);
         });
     }
     
@@ -120,8 +135,11 @@ class Payments extends Component {
         const am = Number(amount);
         this.setState({
             data: this.state.data.map(item => {
-                let percent = am * (item.percent / 100);
-                return Object.assign(item, {amount: this.formatDollar(percent)})
+                let dollars = am * (item.percent / 100);
+                return Object.assign(item, {
+                    stringAmount: this.formatDollar(dollars),
+                    numberAmount: dollars
+                });
             })
         });
     }
@@ -135,7 +153,7 @@ class Payments extends Component {
             name: event.target.value
         });
 
-        this.calculate(Number(event.target.value));
+        this.calculate(event.target.value);
     }
 
     clearAmount = () => {
