@@ -31,7 +31,11 @@ class Payments extends Component {
         const me  = this;
         const url = 'https://api.mlab.com/api/1/databases/heroku_0lwkfbwj/collections/bills?apiKey=aVVSLiUK4fYFdptcpCwQR2sO9QXtZKXs';
 
-        axios.get(url).then(resp => me.setState({data: resp.data, isDownloading: false}));
+        //axios.get(url).then(resp => me.setState({data: resp.data, isDownloading: false}));
+        me.setState({
+            data: [{ "_id": { "$oid": "5bfdedebfb6fc006ff268fb2" }, "name": "Office", "percent": 25, "stringAmount": "$0", "numberAmount": 0 }, { "_id": { "$oid": "5bfdee65fb6fc006ff268fe6" }, "name": "House", "percent": 40, "stringAmount": "$0", "numberAmount": 0 }, { "_id": { "$oid": "5bfdee7ffb6fc006ff268ff9" }, "name": "Other1", "percent": 20, "stringAmount": "$0", "numberAmount": 0 }, { "_id": { "$oid": "5bfdee90fb6fc006ff269001" }, "name": "Other2", "percent": 10, "stringAmount": "$0", "numberAmount": 0 }, { "_id": { "$oid": "5bfed8f5fb6fc006ff27381f" }, "name": "Other3", "percent": 5, "stringAmount": "$0", "numberAmount": 0 }],
+            isDownloading: false
+        });
     }
 
     render() {

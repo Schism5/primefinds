@@ -38,7 +38,7 @@ class Header extends Component {
                 </List>
                 <Divider />
                 <List>
-                    <ListItem button key="BillsHistory" onClick={() => {this.props.setPage('Payments')}}>
+                    <ListItem button key="BillsHistory" onClick={() => {this.props.setPage('BillsHistory')}}>
                         <ListItemIcon><HistoryIcon /></ListItemIcon>
                         <ListItemText primary="Bills History"/>
                     </ListItem>
