@@ -10,7 +10,7 @@ class App extends Component {
     super(props);
 
     this.state = {
-      page: 'BillsHistory'
+      page: 'Payments'
     }
 
     this.setPage = this.setPage.bind(this);
