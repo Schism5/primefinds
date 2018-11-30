@@ -140,7 +140,7 @@ class BillsHistory extends Component {
             }
 
             this.setState({ tableData: data, showTable: true });
-            this._getChart();
+            //this._getChart();
         });
     }
 
