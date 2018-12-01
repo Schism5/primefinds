@@ -12,15 +12,29 @@ import MoneyIcon from '@material-ui/icons/AttachMoney';
 import PieChartIcon from '@material-ui/icons/PieChart';
 import HistoryIcon from '@material-ui/icons/History';
 import { Divider } from '@material-ui/core';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
+import axios from 'axios';
 
 class Header extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isOpen: false
+            isOpen: false,
+            modalOpen: false,
+            modalText: ''
         };
 
         this.toggleDrawer = this.toggleDrawer.bind(this);
+        this.addEmail = this.addEmail.bind(this);
+        this.copyEmails = this.copyEmails.bind(this);
     }
 
     render() {
@@ -60,6 +74,39 @@ class Header extends Component {
                     Prime Finds
                 </Typography>
 
+                <div style={{float:'right', paddingTop:'10px', paddingRight:'10px', cursor:'pointer'}}>
+                    <FileCopyIcon onClick={this.copyEmails} style={{marginRight:'25px'}}/>
+                    <PersonAddIcon onClick={()=>this.setState({modalOpen:true})}/>
+                </div>
+
+                <Dialog open={this.state.modalOpen}>
+                    <DialogTitle id="form-dialog-title">Add Email</DialogTitle>
+                    <DialogContent style={{width:'300px'}}>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="name"
+                            label="Email Address"
+                            type="email"
+                            fullWidth
+                            value={this.state.modalText}
+                            onChange={(e)=>this.setState({modalText: e.target.value})}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button 
+                            onClick={()=>this.setState({modalOpen: false, modalText: ''})} 
+                            color="primary">
+                            Cancel
+                        </Button>
+                        <Button 
+                            onClick={this.addEmail} 
+                            color="primary">
+                            Save
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
                 <Drawer open={this.state.isOpen} onClose={this.toggleDrawer(false)}>
                     <div
                         tabIndex={0}
@@ -72,6 +119,25 @@ class Header extends Component {
                 </Drawer>
             </AppBar>
         );
+    }
+
+    copyEmails() {
+        const me  = this;
+        const url = 'https://api.mlab.com/api/1/databases/heroku_0lwkfbwj/collections/email?apiKey=aVVSLiUK4fYFdptcpCwQR2sO9QXtZKXs';
+        
+        axios.get(url).then(resp => {
+            let s = resp.data.reduce((acc, current) => acc + current.address + ',', '');
+            s = s.substring(0, s.length - 1);
+            console.log(s);
+        });
+    }
+
+    addEmail() {
+        console.log(this.state.modalText);
+        const url  = "https://api.mlab.com/api/1/databases/heroku_0lwkfbwj/collections/email?apiKey=aVVSLiUK4fYFdptcpCwQR2sO9QXtZKXs";
+
+        axios.post(url, {address:this.state.modalText}).then(resp => console.log(resp));
+        this.setState({modalOpen: false, modalText: ''});
     }
 
     toggleDrawer = open => () => {
