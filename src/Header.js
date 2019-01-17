@@ -56,6 +56,10 @@ class Header extends Component {
                         <ListItemIcon><HistoryIcon /></ListItemIcon>
                         <ListItemText primary="Bills History"/>
                     </ListItem>
+                    <ListItem button key="CSV" onClick={() => {this.props.setPage('CSV')}}>
+                        <ListItemIcon><HistoryIcon /></ListItemIcon>
+                        <ListItemText primary="CSV"/>
+                    </ListItem>
                 </List>
             </div>
         );

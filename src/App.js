@@ -4,6 +4,7 @@ import Payments from './pages/payments/Payments';
 import Sales from './pages/sales/Sales';
 import BillsHistory from './pages/history/BillsHistory';
 import Header from './Header';
+import UploadCsv from './pages/csv/UploadCsv';
 
 class App extends Component {
   constructor(props) {
@@ -19,15 +20,18 @@ class App extends Component {
   render() {
     let page;
     switch(this.state.page) {
-      case 'Payments': 
-        page = <Payments />;
-        break;
-      case 'Sales':
-        page = <Sales />;
-        break;
-      case 'BillsHistory':
-        page = <BillsHistory />;
-        break;
+        case 'Payments': 
+            page = <Payments />;
+            break;
+        case 'Sales':
+            page = <Sales />;
+            break;
+        case 'BillsHistory':
+            page = <BillsHistory />;
+            break;
+        case 'CSV':
+            page = <UploadCsv />;
+            break;
       default:
         page = <div>Error in switch statement</div>
     }
