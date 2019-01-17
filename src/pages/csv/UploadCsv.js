@@ -17,7 +17,7 @@ class UploadCsv extends Component {
 
     render() {
         return (
-            <form enctype="multipart/form-data" method="post" action="http://localhost:8080/upload/lol">
+            <form encType="multipart/form-data" method="post" action="http://localhost:8080/manifests">
                 <label htmlFor="avatar">Choose manifest:</label>
 
                 <input 
