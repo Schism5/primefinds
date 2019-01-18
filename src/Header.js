@@ -21,6 +21,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
+import GridIcon from '@material-ui/icons/GridOn';
 import axios from 'axios';
 
 class Header extends Component {
@@ -57,7 +58,7 @@ class Header extends Component {
                         <ListItemText primary="Bills History"/>
                     </ListItem>
                     <ListItem button key="CSV" onClick={() => {this.props.setPage('CSV')}}>
-                        <ListItemIcon><HistoryIcon /></ListItemIcon>
+                        <ListItemIcon><GridIcon /></ListItemIcon>
                         <ListItemText primary="CSV"/>
                     </ListItem>
                 </List>

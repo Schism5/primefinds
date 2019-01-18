@@ -6,11 +6,10 @@ var upload = multer({ storage: multer.memoryStorage() });
 var JSZip = require("jszip");
 var zip = new JSZip();
 
-//app.use(express.static(path.join(__dirname, 'app', 'build')));
+app.use(express.static(path.join(__dirname, 'app', 'build')));
 
 app.get('/', function(req, res) {
-  //res.sendFile(path.join(__dirname, 'app', 'build', 'index.html'));
-  res.sendFile(path.join(__dirname, 'src', 'index.js'));
+    res.sendFile(path.join(__dirname, 'app', 'build', 'index.html'));
 });
 
 app.post('/manifests', upload.single('avatar'), function (req, res, next) {
@@ -18,7 +17,6 @@ app.post('/manifests', upload.single('avatar'), function (req, res, next) {
     const csv = req.file.buffer.toString();
     const oldHeaders = 'Quantity,Retail_Price,Extended Retail,Model_Number,Item_Description,UPC,reason_name,Vendor_Name,Department,Sub-Cat,Shipping_Dim x,Shipping_Dim y,Shipping_Dim z,Shipping Weight,pallet_name,Pallet_ID#,Pallet Size,Product ID';
     const newHeaders = 'Quantity,Retail_Price,Extended Retail,Item_Description,Department,Pallet_ID#';
-    const newToOldMap = {0:"0", 1:"1", 2:"2", 3:"4", 4:"8", 5:"15"};
     const validOldColNums = [0, 1, 2, 4, 8, 15];
     let array = [];
     let split = csv.split('\n');
@@ -44,7 +42,7 @@ app.post('/manifests', upload.single('avatar'), function (req, res, next) {
         array.push(newRow.join(','));
     }
 
-    zip.generateNodeStream({type:'nodebuffer',streamFiles:true}).pipe(res);
+    zip.generateNodeStream({type:'nodebuffer', streamFiles:true}).pipe(res);
 });
 
-app.listen(/*process.env.PORT || */8080);
+app.listen(process.env.PORT || 8080);

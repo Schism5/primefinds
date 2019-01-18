@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import TextField from '@material-ui/core/TextField';
-import ClearIcon from '@material-ui/icons/Clear';
 import axios from 'axios';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -17,17 +16,20 @@ class UploadCsv extends Component {
 
     render() {
         return (
-            <form encType="multipart/form-data" method="post" action="http://localhost:8080/manifests">
-                <label htmlFor="avatar">Choose manifest:</label>
+            <form style={{margin:'20px 0 0 20px'}} encType="multipart/form-data" method="post" action="/manifests">
+                <label htmlFor="avatar">Select Manifest</label>
 
                 <input 
+                    style={{marginLeft:'15px'}}
                     type="file"
                     id="avatar"
                     name="avatar"
                     accept=".csv, .xlsx" 
                     onChange={(e) => console.log(e.target.files)}
                 />
-                <input type="submit" value="submit" id="submit" />
+                <div style={{marginTop:'10px'}}>
+                    <input type="submit" value="Submit" id="submit" />
+                </div>
             </form>
         );
     }
