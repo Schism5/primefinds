@@ -16,8 +16,8 @@ app.post('/manifests', upload.single('avatar'), function (req, res, next) {
     // req.file is the `avatar` file
     const csv = req.file.buffer.toString();
     const oldHeaders = 'Quantity,Retail_Price,Extended Retail,Model_Number,Item_Description,UPC,reason_name,Vendor_Name,Department,Sub-Cat,Shipping_Dim x,Shipping_Dim y,Shipping_Dim z,Shipping Weight,pallet_name,Pallet_ID#,Pallet Size,Product ID';
-    const newHeaders = 'Quantity,Retail_Price,Extended Retail,Item_Description,Department,Pallet_ID#';
-    const validOldColNums = [0, 1, 2, 4, 8, 15];
+    const newHeaders = 'Quantity,Retail_Price,Item_Description,Department,Pallet_ID#';
+    const validOldColNums = [0, 1, 4, 8, 15];
     let array = [];
     let split = csv.split('\n');
     const regex = /(?!\B"[^"]*),(?![^"]*"\B)/;
